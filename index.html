@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shto Kurset</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --transition-speed: 0.3s;
+            --primary-color: #0d6efd;
+            --error-color: #dc3545;
+            --success-color: #198754;
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Courier New', monospace;
+            color: var(--text-color);
+        }
+
+        .header-section {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+            padding: 2rem 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .page-title {
+            color: var(--text-color);
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        .course-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            transition: all var(--transition-speed) ease-in-out;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .course-container:hover {
+            box-shadow: 0 4px 8px rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .course-number {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .remove-course {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            cursor: pointer;
+            color: var(--error-color);
+            transition: transform var(--transition-speed) ease;
+        }
+
+        .remove-course:hover {
+            transform: scale(1.1);
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-control, .form-select {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 0.625rem 0.75rem;
+            transition: all var(--transition-speed) ease-in-out;
+            font-family: 'Courier New', monospace;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: var(--text-color);
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.15);
+            color: var(--text-color);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-select option {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .error-feedback {
+            color: var(--error-color);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .form-control.is-invalid,
+        .form-select.is-invalid {
+            border-color: var(--error-color);
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+
+        .form-control.is-invalid + .error-feedback,
+        .form-select.is-invalid + .error-feedback {
+            display: block;
+        }
+
+        .actions-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all var(--transition-speed) ease-in-out;
+            font-family: 'Courier New', monospace;
+        }
+
+        .btn-add-course {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(255,255,255,0.1);
+        }
+
+        .alert {
+            background-color: rgba(220, 53, 69, 0.1);
+            border-color: var(--error-color);
+            color: var(--text-color);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .course-container {
+            animation: slideIn var(--transition-speed) ease-out;
+        }
+
+        @media (max-width: 768px) {
+            .actions-container {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .header-title {
+                font-size: 1.5rem;
+            }
+
+            .header-subtitle {
+                font-size: 1rem;
+            }
+        }
+
+        /* Time input color fix for Webkit browsers */
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
+
+        /* Calendar Icon Styles */
+        .calendar-icon {
+            width: 80px;
+            height: 90px;
+            background: #FF3B30;
+            border-radius: 12px;
+            position: relative;
+            margin: 0 auto 2rem;
+            box-shadow: 0 4px 8px rgba(255,255,255,0.1);
+        }
+
+        .calendar-icon::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%;
+            height: 16px;
+            background: #8E8E93;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .calendar-month {
+            background: #ffffff;
+            color: #FF3B30;
+            text-align: center;
+            padding: 4px 0;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 12px 12px 0 0;
+            text-transform: uppercase;
+        }
+
+        .calendar-day {
+            color: #ffffff;
+            font-size: 38px;
+            font-weight: bold;
+            text-align: center;
+            padding: 8px 0;
+        }
+
+        /* Add space between icon and form */
+        .icon-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 3rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-section">
+        <h1 class="header-title">Orari akademik ne kalendar ics</h1>
+        <p class="header-subtitle">Shto orarin e lendeve ne kalendarin e telefonit tuaj</p>
+    </div>
+
+    <div class="main-container">
+        <div class="icon-container">
+            <div class="calendar-icon">
+                <div class="calendar-month"></div>
+                <div class="calendar-day"></div>
+            </div>
+        </div>
+
+        <h2 class="page-title">Shto Kurset</h2>
+        
+        <div id="coursesContainer">
+            <!-- Course forms will be added here dynamically -->
+        </div>
+
+        <div class="actions-container">
+            <button type="button" class="btn btn-success btn-add-course" id="addCourseBtn">
+                <i class="bi bi-plus-lg"></i> Shto Kurs të Ri
+            </button>
+            <button type="button" class="btn btn-primary" id="nextBtn">Vazhdo</button>
+        </div>
+    </div>
+
+    <template id="courseTemplate">
+        <div class="course-container">
+            <div class="course-header">
+                <span class="course-number"></span>
+                <div class="remove-course">
+                    <i class="bi bi-x-circle-fill"></i>
+                </div>
+            </div>
+            <form class="course-form">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Emri i lëndës *</label>
+                        <input type="text" class="form-control course-name" required>
+                        <div class="error-feedback">Ju lutem plotësoni emrin e lëndës</div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label class="form-label">Dita *</label>
+                        <select class="form-select course-day" required>
+                            <option value="">Zgjidhni ditën</option>
+                            <option value="E Hënë">E Hënë</option>
+                            <option value="E Martë">E Martë</option>
+                            <option value="E Mërkurë">E Mërkurë</option>
+                            <option value="E Enjte">E Enjte</option>
+                            <option value="E Premte">E Premte</option>
+                            <option value="E Shtunë">E Shtunë</option>
+                            <option value="E Diel">E Diel</option>
+                        </select>
+                        <div class="error-feedback">Ju lutem zgjidhni një ditë</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Ora *</label>
+                        <input type="time" class="form-control course-start-time" required>
+                        <div class="error-feedback">Ju lutem zgjidhni orën e fillimit</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Mbarimi i Orës *</label>
+                        <input type="time" class="form-control course-end-time" required>
+                        <div class="error-feedback">Ju lutem zgjidhni orën e mbarimit</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Pedagogu</label>
+                        <input type="text" class="form-control course-professor">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Dhoma *</label>
+                        <input type="text" class="form-control course-room" required>
+                        <div class="error-feedback">Ju lutem plotësoni dhomën</div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </template>
+
+    <script>
+        // Store all courses
+        let courses = [];
+        let courseCount = 0;
+
+        // Get DOM elements
+        const coursesContainer = document.getElementById('coursesContainer');
+        const addCourseBtn = document.getElementById('addCourseBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const courseTemplate = document.getElementById('courseTemplate');
+
+        // Add new course form
+        function addCourseForm() {
+            courseCount++;
+            const courseElement = courseTemplate.content.cloneNode(true);
+            
+            // Set course number
+            courseElement.querySelector('.course-number').textContent = `Kursi ${courseCount}`;
+            
+            // Add form validation listeners
+            const form = courseElement.querySelector('.course-form');
+            const inputs = form.querySelectorAll('input[required], select[required]');
+            inputs.forEach(input => {
+                input.addEventListener('input', validateInput);
+                input.addEventListener('blur', validateInput);
+            });
+
+            // Add time validation
+            const startTime = form.querySelector('.course-start-time');
+            const endTime = form.querySelector('.course-end-time');
+            [startTime, endTime].forEach(input => {
+                input.addEventListener('change', () => validateTimeRange(startTime, endTime));
+            });
+
+            // Add remove functionality
+            const removeBtn = courseElement.querySelector('.remove-course');
+            removeBtn.addEventListener('click', function() {
+                const container = this.closest('.course-container');
+                if (coursesContainer.children.length > 1) {
+                    container.style.opacity = '0';
+                    container.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        container.remove();
+                        updateCourseNumbers();
+                    }, 300);
+                } else {
+                    showError('Duhet të keni të paktën një kurs!');
+                }
+            });
+
+            coursesContainer.appendChild(courseElement);
+        }
+
+        // Update course numbers after removal
+        function updateCourseNumbers() {
+            const containers = coursesContainer.querySelectorAll('.course-container');
+            containers.forEach((container, index) => {
+                container.querySelector('.course-number').textContent = `Kursi ${index + 1}`;
+            });
+            courseCount = containers.length;
+        }
+
+        // Validate individual input
+        function validateInput(event) {
+            const input = event.target;
+            const isValid = input.checkValidity();
+            input.classList.toggle('is-invalid', !isValid);
+        }
+
+        // Validate time range
+        function validateTimeRange(startInput, endInput) {
+            const startTime = startInput.value;
+            const endTime = endInput.value;
+
+            if (startTime && endTime) {
+                const isValid = startTime < endTime;
+                endInput.classList.toggle('is-invalid', !isValid);
+                if (!isValid) {
+                    endInput.nextElementSibling.textContent = 'Ora e mbarimit duhet të jetë pas orës së fillimit';
+                }
+                return isValid;
+            }
+            return true;
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'alert alert-danger alert-dismissible fade show';
+            errorDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.querySelector('.main-container').insertBefore(errorDiv, coursesContainer);
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
+
+        // Collect and validate course data
+        function collectCourseData() {
+            const courseForms = document.querySelectorAll('.course-form');
+            let isValid = true;
+            let newCourses = [];
+
+            courseForms.forEach(form => {
+                // Validate all required fields
+                const requiredInputs = form.querySelectorAll('[required]');
+                requiredInputs.forEach(input => {
+                    const valid = input.checkValidity();
+                    input.classList.toggle('is-invalid', !valid);
+                    if (!valid) isValid = false;
+                });
+
+                // Validate time range
+                const startTime = form.querySelector('.course-start-time');
+                const endTime = form.querySelector('.course-end-time');
+                if (!validateTimeRange(startTime, endTime)) {
+                    isValid = false;
+                }
+
+                if (!isValid) return;
+
+                // Collect data
+                newCourses.push({
+                    courseName: form.querySelector('.course-name').value.trim(),
+                    day: form.querySelector('.course-day').value,
+                    startTime: startTime.value,
+                    endTime: endTime.value,
+                    professor: form.querySelector('.course-professor').value.trim(),
+                    room: form.querySelector('.course-room').value.trim()
+                });
+            });
+
+            if (isValid) {
+                courses = newCourses;
+                return true;
+            }
+            showError('Ju lutem korrigjoni gabimet në formular.');
+            return false;
+        }
+
+        // Event Listeners
+        addCourseBtn.addEventListener('click', addCourseForm);
+
+        nextBtn.addEventListener('click', function() {
+            if (collectCourseData()) {
+                localStorage.setItem('courseData', JSON.stringify(courses));
+                window.location.href = 'semester-end.html';
+            }
+        });
+
+        // Add initial course form
+        addCourseForm();
+
+        // Update calendar icon with current date
+        function updateCalendarIcon() {
+            const months = ['Jan', 'Shk', 'Mar', 'Pri', 'Maj', 'Qer', 
+                          'Kor', 'Gus', 'Sht', 'Tet', 'Nën', 'Dhj'];
+            const now = new Date();
+            const month = months[now.getMonth()];
+            const day = now.getDate();
+
+            document.querySelector('.calendar-month').textContent = month;
+            document.querySelector('.calendar-day').textContent = day;
+        }
+
+        // Call it when page loads
+        updateCalendarIcon();
+    </script>
+</body>
+</html> 

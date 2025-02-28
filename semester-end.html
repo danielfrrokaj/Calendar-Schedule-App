@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zgjidhni Datën e Mbarimit të Semestrit</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --transition-speed: 0.3s;
+            --primary-color: #0d6efd;
+            --error-color: #dc3545;
+            --success-color: #198754;
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Courier New', monospace;
+            color: var(--text-color);
+        }
+
+        .header-section {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+            padding: 2rem 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .course-summary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 0.625rem 0.75rem;
+            transition: all var(--transition-speed) ease-in-out;
+            font-family: 'Courier New', monospace;
+        }
+
+        .form-control:focus {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: var(--text-color);
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.15);
+            color: var(--text-color);
+        }
+
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all var(--transition-speed) ease-in-out;
+            font-family: 'Courier New', monospace;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(255,255,255,0.1);
+        }
+
+        /* Date input color fix for Webkit browsers */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
+
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 1.5rem;
+            }
+
+            .header-subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-section">
+        <h1 class="header-title">Orari akademik ne kalendar ics</h1>
+        <p class="header-subtitle">Shto orarin e lendeve ne kalendarin e telefonit tuaj</p>
+    </div>
+
+    <div class="main-container">
+        <h2 class="mb-4">Zgjidhni Datën e Mbarimit të Semestrit</h2>
+
+        <div class="course-summary">
+            <h4 class="mb-3">Kurset e Zgjedhura</h4>
+            <div id="coursesList"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-4">
+                    <label for="semesterEndDate" class="form-label">Data e Mbarimit të Semestrit *</label>
+                    <input type="date" class="form-control" id="semesterEndDate" required>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-secondary" id="backBtn">Kthehu</button>
+                    <button type="button" class="btn btn-primary" id="finishBtn">Përfundo</button>
+                    <button type="button" class="btn btn-success" id="downloadICSBtn" disabled>
+                        Shkarko Kalendarin (.ics)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import ICSGenerator from './icsGenerator.js';
+
+        // Get DOM elements
+        const coursesList = document.getElementById('coursesList');
+        const semesterEndDate = document.getElementById('semesterEndDate');
+        const backBtn = document.getElementById('backBtn');
+        const finishBtn = document.getElementById('finishBtn');
+        const downloadICSBtn = document.getElementById('downloadICSBtn');
+
+        // Get courses data from localStorage
+        const courses = JSON.parse(localStorage.getItem('courseData') || '[]');
+
+        // Display courses summary
+        function displayCoursesSummary() {
+            if (courses.length === 0) {
+                coursesList.innerHTML = '<p class="text-muted">Nuk ka kurse të zgjedhura.</p>';
+                return;
+            }
+
+            const courseItems = courses.map(course => `
+                <div class="mb-2">
+                    <strong>${course.courseName}</strong> - ${course.day}, 
+                    ${course.startTime} - ${course.endTime}
+                    ${course.professor ? `, Prof. ${course.professor}` : ''}
+                    , Dhoma: ${course.room}
+                </div>
+            `).join('');
+
+            coursesList.innerHTML = courseItems;
+        }
+
+        // Validate and save all data
+        function saveAllData() {
+            const endDate = semesterEndDate.value;
+            
+            if (!endDate) {
+                alert('Ju lutem zgjidhni datën e mbarimit të semestrit!');
+                return;
+            }
+
+            // Combine all data
+            const finalData = {
+                courses: courses,
+                semesterEndDate: endDate
+            };
+
+            // Save to localStorage
+            localStorage.setItem('finalScheduleData', JSON.stringify(finalData));
+            
+            // Enable the download button
+            downloadICSBtn.disabled = false;
+            
+            // Show success message
+            alert('Të dhënat u ruajtën me sukses!');
+        }
+
+        // Generate and download ICS file
+        function downloadICSFile() {
+            const endDate = semesterEndDate.value;
+            if (!endDate) {
+                alert('Ju lutem zgjidhni datën e mbarimit të semestrit!');
+                return;
+            }
+
+            const icsGenerator = new ICSGenerator(courses, endDate);
+            icsGenerator.downloadICS('orari.ics');
+        }
+
+        // Event Listeners
+        backBtn.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+
+        finishBtn.addEventListener('click', saveAllData);
+        downloadICSBtn.addEventListener('click', downloadICSFile);
+
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        semesterEndDate.min = today;
+
+        // Display courses on page load
+        displayCoursesSummary();
+    </script>
+</body>
+</html> 
