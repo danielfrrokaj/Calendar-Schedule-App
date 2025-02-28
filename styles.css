@@ -420,4 +420,38 @@ input[type="time"]::-webkit-calendar-picker-indicator {
         margin-top: 2rem;
         padding-top: 1.5rem;
     }
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+}
+
+.header-text {
+    text-align: left;
+}
+
+.header-logo {
+    width: 120px;
+    height: auto;
+    filter: invert(100%);
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column-reverse;
+        gap: 2rem;
+    }
+
+    .header-text {
+        text-align: center;
+    }
+
+    .header-logo {
+        width: 100px;
+    }
 } 
