@@ -4,267 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shto Kurset</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        :root {
-            --transition-speed: 0.3s;
-            --primary-color: #0d6efd;
-            --error-color: #dc3545;
-            --success-color: #198754;
-            --bg-color: #000000;
-            --text-color: #ffffff;
-            --border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        body {
-            background-color: var(--bg-color);
-            font-family: 'Courier New', monospace;
-            color: var(--text-color);
-        }
-
-        .header-section {
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--text-color);
-            padding: 2rem 1rem;
-            text-align: center;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .header-title {
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .header-subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-
-        .main-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-        }
-
-        .page-title {
-            color: var(--text-color);
-            margin-bottom: 2rem;
-            font-weight: 600;
-        }
-
-        .course-container {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            transition: all var(--transition-speed) ease-in-out;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .course-container:hover {
-            box-shadow: 0 4px 8px rgba(255,255,255,0.1);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .course-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .course-number {
-            font-weight: 600;
-            color: var(--text-color);
-        }
-
-        .remove-course {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            cursor: pointer;
-            color: var(--error-color);
-            transition: transform var(--transition-speed) ease;
-        }
-
-        .remove-course:hover {
-            transform: scale(1.1);
-        }
-
-        .form-label {
-            font-weight: 500;
-            color: var(--text-color);
-        }
-
-        .form-control, .form-select {
-            background-color: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            border-radius: 8px;
-            padding: 0.625rem 0.75rem;
-            transition: all var(--transition-speed) ease-in-out;
-            font-family: 'Courier New', monospace;
-        }
-
-        .form-control:focus, .form-select:focus {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-color: var(--text-color);
-            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.15);
-            color: var(--text-color);
-        }
-
-        .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .form-select option {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-        }
-
-        .error-feedback {
-            color: var(--error-color);
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-            display: none;
-        }
-
-        .form-control.is-invalid,
-        .form-select.is-invalid {
-            border-color: var(--error-color);
-            background-color: rgba(220, 53, 69, 0.1);
-        }
-
-        .form-control.is-invalid + .error-feedback,
-        .form-select.is-invalid + .error-feedback {
-            display: block;
-        }
-
-        .actions-container {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .btn {
-            padding: 0.625rem 1.25rem;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: all var(--transition-speed) ease-in-out;
-            font-family: 'Courier New', monospace;
-        }
-
-        .btn-add-course {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(255,255,255,0.1);
-        }
-
-        .alert {
-            background-color: rgba(220, 53, 69, 0.1);
-            border-color: var(--error-color);
-            color: var(--text-color);
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .course-container {
-            animation: slideIn var(--transition-speed) ease-out;
-        }
-
-        @media (max-width: 768px) {
-            .actions-container {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-            }
-
-            .header-title {
-                font-size: 1.5rem;
-            }
-
-            .header-subtitle {
-                font-size: 1rem;
-            }
-        }
-
-        /* Time input color fix for Webkit browsers */
-        input[type="time"]::-webkit-calendar-picker-indicator {
-            filter: invert(1);
-        }
-
-        /* Calendar Icon Styles */
-        .calendar-icon {
-            width: 80px;
-            height: 90px;
-            background: #FF3B30;
-            border-radius: 12px;
-            position: relative;
-            margin: 0 auto 2rem;
-            box-shadow: 0 4px 8px rgba(255,255,255,0.1);
-        }
-
-        .calendar-icon::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40%;
-            height: 16px;
-            background: #8E8E93;
-            border-radius: 8px 8px 0 0;
-        }
-
-        .calendar-month {
-            background: #ffffff;
-            color: #FF3B30;
-            text-align: center;
-            padding: 4px 0;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 12px 12px 0 0;
-            text-transform: uppercase;
-        }
-
-        .calendar-day {
-            color: #ffffff;
-            font-size: 38px;
-            font-weight: bold;
-            text-align: center;
-            padding: 8px 0;
-        }
-
-        /* Add space between icon and form */
-        .icon-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 3rem;
-            margin-top: 1rem;
-        }
-    </style>
+    <link href="styles.css" rel="stylesheet">
 </head>
 <body>
     <div class="header-section">
@@ -280,7 +23,7 @@
             </div>
         </div>
 
-        <h2 class="page-title">Shto Kurset</h2>
+        <h2 class="page-title">Shto Lëndët</h2>
         
         <div id="coursesContainer">
             <!-- Course forms will be added here dynamically -->
@@ -288,7 +31,7 @@
 
         <div class="actions-container">
             <button type="button" class="btn btn-success btn-add-course" id="addCourseBtn">
-                <i class="bi bi-plus-lg"></i> Shto Kurs të Ri
+                <i class="bi bi-plus-lg"></i> Shto Lëndë tjetër
             </button>
             <button type="button" class="btn btn-primary" id="nextBtn">Vazhdo</button>
         </div>
@@ -352,6 +95,64 @@
         </div>
     </template>
 
+    <footer class="footer-section">
+        <div class="container">
+            <h3 class="faq-title">Pyetje të Shpeshta</h3>
+            <div class="accordion" id="faqAccordion">
+                <!-- FAQ Item 1 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            Si ta importoj skedarin .ics në telefonin tim?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Pasi të shkarkoni skedarin .ics, hapeni atë në telefonin tuaj. Sistemi do t'ju pyesë se në cilën aplikacion të kalendarit dëshironi ta hapni. Zgjidhni aplikacionin tuaj të preferuar të kalendarit (Google Calendar, Apple Calendar, etj.) dhe të gjitha ngjarjet do të shtohen automatikisht në kalendarin tuaj.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            A mund t'i modifikoj lëndët pasi t'i kem importuar?
+                        </button>
+                    </h2>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Po, pasi lëndët të importohen në kalendarin tuaj, mund t'i modifikoni si çdo ngjarje tjetër të kalendarit. Mund të ndryshoni kohën, vendndodhjen, të shtoni alarme ose detaje shtesë sipas nevojës suaj.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            A do të përditësohet kalendari im automatikisht nëse ka ndryshime në orar?
+                        </button>
+                    </h2>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Jo, skedari .ics krijon një import të njëhershëm të lëndëve. Nëse ka ndryshime në orar, do t'ju duhet të gjeneroni dhe importoni një skedar të ri .ics. Rekomandojmë të fshini ngjarjet e vjetra përpara se të importoni orarin e ri për të shmangur dublikimin.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="developer-credit">
+                <p>
+                    Developed by Danjel Frrokaj
+                    <a href="https://github.com/danielfrrokaj" class="github-link" target="_blank" rel="noopener noreferrer">
+                        <i class="bi bi-github"></i>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Store all courses
         let courses = [];
