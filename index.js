@@ -56,7 +56,7 @@ function setupRemoveButton(courseElement) {
         if (coursesContainer.children.length > 1) {
             animateAndRemoveCourse(container);
         } else {
-            showError('Duhet të keni të paktën një lëndë!');
+            showError('Duhet të keni të paktën një kurs!');
         }
     });
 }
