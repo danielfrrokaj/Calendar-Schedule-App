@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // DOM Elements
 const coursesContainer = document.getElementById('coursesContainer');
 const addCourseBtn = document.getElementById('addCourseBtn');
@@ -198,5 +197,3 @@ function initialize() {
 
 // Start the application
 document.addEventListener('DOMContentLoaded', initialize);
-=======
->>>>>>> parent of 21048c6 (code cleaned and some details changed)
