@@ -1,5 +1,6 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
+// Use direct values for browser environment
 const supabaseUrl = 'https://bcsyqrloqnrmjzpoldfk.supabase.co'
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJjc3lxcmxvcW5ybWp6cG9sZGZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA3OTcxNzUsImV4cCI6MjA1NjM3MzE3NX0.2APbq3omttsK_XvEnbSdzjqwgtyovErQJW0rPIPVJfA'
 
@@ -19,7 +20,10 @@ export async function saveScheduleToSupabase(courses, endDate) {
             .select()
             .single();
 
-        if (scheduleError) throw scheduleError;
+        if (scheduleError) {
+            console.error('Schedule Error:', scheduleError);
+            throw scheduleError;
+        }
 
         // Then, insert all courses with the schedule_id
         const coursesWithScheduleId = courses.map(course => ({
@@ -37,7 +41,10 @@ export async function saveScheduleToSupabase(courses, endDate) {
             .from('courses')
             .insert(coursesWithScheduleId);
 
-        if (coursesError) throw coursesError;
+        if (coursesError) {
+            console.error('Courses Error:', coursesError);
+            throw coursesError;
+        }
 
         return schedule.id;
     } catch (error) {
