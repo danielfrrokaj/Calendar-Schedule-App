@@ -161,6 +161,173 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="index.js"></script>
+    <script>
+        // Store all courses
+        let courses = [];
+        let courseCount = 0;
+
+        // Get DOM elements
+        const coursesContainer = document.getElementById('coursesContainer');
+        const addCourseBtn = document.getElementById('addCourseBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const courseTemplate = document.getElementById('courseTemplate');
+
+        // Add new course form
+        function addCourseForm() {
+            courseCount++;
+            const courseElement = courseTemplate.content.cloneNode(true);
+            
+            // Set course number
+            courseElement.querySelector('.course-number').textContent = `Kursi ${courseCount}`;
+            
+            // Add form validation listeners
+            const form = courseElement.querySelector('.course-form');
+            const inputs = form.querySelectorAll('input[required], select[required]');
+            inputs.forEach(input => {
+                input.addEventListener('input', validateInput);
+                input.addEventListener('blur', validateInput);
+            });
+
+            // Add time validation
+            const startTime = form.querySelector('.course-start-time');
+            const endTime = form.querySelector('.course-end-time');
+            [startTime, endTime].forEach(input => {
+                input.addEventListener('change', () => validateTimeRange(startTime, endTime));
+            });
+
+            // Add remove functionality
+            const removeBtn = courseElement.querySelector('.remove-course');
+            removeBtn.addEventListener('click', function() {
+                const container = this.closest('.course-container');
+                if (coursesContainer.children.length > 1) {
+                    container.style.opacity = '0';
+                    container.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        container.remove();
+                        updateCourseNumbers();
+                    }, 300);
+                } else {
+                    showError('Duhet të keni të paktën një kurs!');
+                }
+            });
+
+            coursesContainer.appendChild(courseElement);
+        }
+
+        // Update course numbers after removal
+        function updateCourseNumbers() {
+            const containers = coursesContainer.querySelectorAll('.course-container');
+            containers.forEach((container, index) => {
+                container.querySelector('.course-number').textContent = `Kursi ${index + 1}`;
+            });
+            courseCount = containers.length;
+        }
+
+        // Validate individual input
+        function validateInput(event) {
+            const input = event.target;
+            const isValid = input.checkValidity();
+            input.classList.toggle('is-invalid', !isValid);
+        }
+
+        // Validate time range
+        function validateTimeRange(startInput, endInput) {
+            const startTime = startInput.value;
+            const endTime = endInput.value;
+
+            if (startTime && endTime) {
+                const isValid = startTime < endTime;
+                endInput.classList.toggle('is-invalid', !isValid);
+                if (!isValid) {
+                    endInput.nextElementSibling.textContent = 'Ora e mbarimit duhet të jetë pas orës së fillimit';
+                }
+                return isValid;
+            }
+            return true;
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'alert alert-danger alert-dismissible fade show';
+            errorDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.querySelector('.main-container').insertBefore(errorDiv, coursesContainer);
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
+
+        // Collect and validate course data
+        function collectCourseData() {
+            const courseForms = document.querySelectorAll('.course-form');
+            let isValid = true;
+            let newCourses = [];
+
+            courseForms.forEach(form => {
+                // Validate all required fields
+                const requiredInputs = form.querySelectorAll('[required]');
+                requiredInputs.forEach(input => {
+                    const valid = input.checkValidity();
+                    input.classList.toggle('is-invalid', !valid);
+                    if (!valid) isValid = false;
+                });
+
+                // Validate time range
+                const startTime = form.querySelector('.course-start-time');
+                const endTime = form.querySelector('.course-end-time');
+                if (!validateTimeRange(startTime, endTime)) {
+                    isValid = false;
+                }
+
+                if (!isValid) return;
+
+                // Collect data
+                newCourses.push({
+                    courseName: form.querySelector('.course-name').value.trim(),
+                    day: form.querySelector('.course-day').value,
+                    startTime: startTime.value,
+                    endTime: endTime.value,
+                    professor: form.querySelector('.course-professor').value.trim(),
+                    room: form.querySelector('.course-room').value.trim()
+                });
+            });
+
+            if (isValid) {
+                courses = newCourses;
+                return true;
+            }
+            showError('Ju lutem korrigjoni gabimet në formular.');
+            return false;
+        }
+
+        // Event Listeners
+        addCourseBtn.addEventListener('click', addCourseForm);
+
+        nextBtn.addEventListener('click', function() {
+            if (collectCourseData()) {
+                localStorage.setItem('courseData', JSON.stringify(courses));
+                window.location.href = 'semester-end.html';
+            }
+        });
+
+        // Add initial course form
+        addCourseForm();
+
+        // Update calendar icon with current date
+        function updateCalendarIcon() {
+            const months = ['Jan', 'Shk', 'Mar', 'Pri', 'Maj', 'Qer', 
+                          'Kor', 'Gus', 'Sht', 'Tet', 'Nën', 'Dhj'];
+            const now = new Date();
+            const month = months[now.getMonth()];
+            const day = now.getDate();
+
+            document.querySelector('.calendar-month').textContent = month;
+            document.querySelector('.calendar-day').textContent = day;
+        }
+
+        // Call it when page loads
+        updateCalendarIcon();
+    </script>
 </body>
 </html> 
