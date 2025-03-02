@@ -1,7 +1,11 @@
 # ICS Course Schedule Creator
 
 A web application that helps students create and manage their academic schedules by generating ICS calendar files. This tool allows for easy import of class schedules into various calendar applications like Google Calendar, Apple Calendar, and other calendar apps that support the ICS format.
-![Image Description](assets/screen1.png) ![Image Description](assets/screen2.png)
+<div style="display: inline">
+<img src="assets/screen2.png" alt="Image Description" width="300">
+<img src="assets/screen1.png" alt="Image Description" width="300">
+</div>
+
 ## Features
 
 - **User-Friendly Interface**
