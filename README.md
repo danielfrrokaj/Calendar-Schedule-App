@@ -7,9 +7,11 @@ schedules into various calendar applications like Google
 Calendar, Apple Calendar, and other calendar apps that 
 support the ICS format.
 <div style="display: inline">
-<img src="#" alt="Image Description" 
+<img src="images\firstpage.png" alt="Image Description" 
 width="300">
-<img src="#" alt="Image Description" 
+<img src="images\secondpage.png" alt="Image Description" 
+width="300">
+<img src="images\thirdpage.png" alt="Image Description" 
 width="300">
 </div>
 
