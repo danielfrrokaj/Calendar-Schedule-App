@@ -52,7 +52,7 @@ times
 ## How to Use
 
 1. **Adding Courses**
-   - Click "Shto Lëndë tjetër" to add a new course
+   - Click "Add a new course" to add a new course
    - Fill in the required information:
      - Course name
      - Day of the week
@@ -67,7 +67,7 @@ times
    - All changes are validated in real-time
 
 3. **Generating Calendar File**
-   - Click "Vazhdo" after adding all courses
+   - Click "Continue to next step" after adding all courses
    - The system will generate an ICS file
    - Download and import the file into your preferred 
 calendar application
