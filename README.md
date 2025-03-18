@@ -11,8 +11,6 @@ support the ICS format.
 width="300">
 <img src="images\secondpage.png" alt="Image Description" 
 width="300">
-<img src="images\thirdpage.png" alt="Image Description" 
-width="300">
 </div>
 
 ## Features
