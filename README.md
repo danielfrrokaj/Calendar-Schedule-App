@@ -7,9 +7,9 @@ schedules into various calendar applications like Google
 Calendar, Apple Calendar, and other calendar apps that 
 support the ICS format.
 <div style="display: inline">
-<img src="assets/screen2.png" alt="Image Description" 
+<img src="#" alt="Image Description" 
 width="300">
-<img src="assets/screen1.png" alt="Image Description" 
+<img src="#" alt="Image Description" 
 width="300">
 </div>
 
@@ -83,12 +83,8 @@ addressing common questions:
 ## Technical Details
 
 - Built with modern web technologies:
-  - HTML5
-  - CSS3 with custom properties
-  - Vanilla JavaScript
-  - Bootstrap 5 framework
-  - Bootstrap Icons
-  - Google Fonts (Poppins)
+  - Next JS
+  - Javascript
 
 - Features:
   - Responsive design
@@ -100,7 +96,7 @@ addressing common questions:
 
 ## Development
 
-This project is developed by Danjel Frrokaj. For 
+This project is developed by Danjel Frrokaj and Mateo Markolaj. For 
 contributions or issues, please visit the [GitHub 
 repository](https://github.com/danielfrrokaj).
 
