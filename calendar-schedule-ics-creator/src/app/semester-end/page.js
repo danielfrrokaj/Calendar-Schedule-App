@@ -7,6 +7,7 @@ export default function SemesterEnd() {
   const router = useRouter()
   const [endDate, setEndDate] = useState('')
   const [courses, setCourses] = useState([])
+  const [error, setError] = useState('')
 
   useEffect(() => {
     const savedCourses = localStorage.getItem('courses')
@@ -17,53 +18,109 @@ export default function SemesterEnd() {
     setCourses(JSON.parse(savedCourses))
   }, [router])
 
+  const validateDate = (dateStr) => {
+    const [day, month, year] = dateStr.split('/')
+    const date = new Date(year, month - 1, day)
+    const today = new Date()
+    
+    if (isNaN(date.getTime())) {
+      return 'Invalid date format'
+    }
+    
+    if (date < today) {
+      return 'End date must be in the future'
+    }
+    
+    return ''
+  }
+
+  const handleDateChange = (e) => {
+    const value = e.target.value
+    let formattedValue = value
+
+    // Remove any non-digit characters
+    const digits = value.replace(/\D/g, '')
+    
+    // Format as dd/mm/yyyy
+    if (digits.length > 0) {
+      if (digits.length <= 2) {
+        formattedValue = digits
+      } else if (digits.length <= 4) {
+        formattedValue = `${digits.slice(0, 2)}/${digits.slice(2)}`
+      } else {
+        formattedValue = `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4, 8)}`
+      }
+    }
+
+    setEndDate(formattedValue)
+    setError(validateDate(formattedValue))
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
-    localStorage.setItem('semesterEnd', endDate)
+    const error = validateDate(endDate)
+    
+    if (error) {
+      setError(error)
+      return
+    }
+
+    // Convert dd/mm/yyyy to yyyy-mm-dd for storage
+    const [day, month, year] = endDate.split('/')
+    const isoDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+    
+    localStorage.setItem('semesterEnd', isoDate)
     router.push('/generate')
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-primary-dark to-primary-medium py-12 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-400 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-neutral-white mb-4">
+          <h1 className="heading-1 text-white mb-6">
             Set Semester End Date
           </h1>
-          <p className="text-lg text-neutral-gray">
+          <p className="text-xl text-blue-50 max-w-2xl mx-auto">
             Choose when your semester ends to generate your calendar
           </p>
         </div>
 
-        <div className="bg-neutral-white shadow-xl rounded-lg p-6">
+        <div className="card">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="endDate" className="block text-sm font-medium text-primary-dark">
+              <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">
                 Semester End Date
               </label>
               <input
-                type="date"
+                type="text"
                 id="endDate"
                 value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="mt-1 block w-full rounded-md bg-neutral-white border-primary-light text-primary-dark shadow-sm focus:border-primary-medium focus:ring-primary-medium focus:ring-opacity-50"
+                onChange={handleDateChange}
+                placeholder="DD/MM/YYYY"
+                className={`mt-1 block w-full px-3 py-2 rounded-md border ${
+                  error ? 'border-red-500' : 'border-gray-200'
+                } text-gray-900 placeholder-gray-400`}
                 required
               />
+              {error && (
+                <p className="mt-1 text-sm text-red-600">{error}</p>
+              )}
             </div>
 
             <div className="flex justify-between">
               <button
                 type="button"
                 onClick={() => router.push('/')}
-                className="inline-flex items-center px-4 py-2 border border-primary-light rounded-md shadow-sm text-sm font-medium text-primary-dark bg-neutral-white hover:bg-neutral-gray hover:border-primary-medium transition-all hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-medium"
+                className="button-secondary px-4 py-2"
               >
                 Back to Courses
               </button>
               <button
                 type="submit"
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-md text-sm font-medium text-neutral-white bg-primary-medium hover:bg-primary-dark transition-all hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-medium"
+                disabled={!!error}
+                className={`button-primary px-6 py-2 ${error ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
-                Continue to Generate
+                Continue
               </button>
             </div>
           </form>
