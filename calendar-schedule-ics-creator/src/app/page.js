@@ -9,7 +9,7 @@ export default function Home() {
             Course Schedule to Calendar
           </h1>
           <p className="text-xl text-blue-50 max-w-2xl mx-auto">
-            Create your semester schedule and export it to your calendar!
+            Create your semester schedule and export it to your calendar
           </p>
         </div>
         <CourseForm />
