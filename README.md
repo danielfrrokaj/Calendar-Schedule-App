@@ -14,7 +14,7 @@ A web application that helps students create and manage their academic schedules
   - Intuitive form controls with real-time validation
 
 - **Course Management**
-  - Add multiple courses with detailed information
+  - Add multiple courses with detailed information.
   - Specify course name, day, time, professor, and room
   - Dynamic form validation for required fields
   - Time conflict validation
